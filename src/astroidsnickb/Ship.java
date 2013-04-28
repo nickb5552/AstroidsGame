@@ -62,7 +62,7 @@ public class Ship
         g2.translate(shipXpos, shipYpos);
         g2.scale(20, 20);
         g2.rotate(Math.toRadians(shipHeading));
-        g2.draw(shipShape);
+        g2.fill(shipShape);
         g2.setTransform(new AffineTransform());
     }
 }

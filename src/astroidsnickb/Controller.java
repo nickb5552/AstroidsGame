@@ -80,8 +80,12 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         battleCruiser.paintSelf(g2);
         for (Astroid a : astroidList)
         {
-            a.moveSelf();
             a.paintSelf(g2);
+            a.moveSelf();
+            if (a.astroidXpos > width)
+            {
+                astroidList.remove(a);
+            }
         } 
     }
 

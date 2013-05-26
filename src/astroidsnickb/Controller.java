@@ -1,5 +1,6 @@
 package astroidsnickb;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -73,15 +74,31 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(spaceImage, 0, 0, null);
+        g2.setTransform(new AffineTransform());
+        g2.setColor(Color.WHITE);
+        g2.drawString(astroidList.size() + "", 500, 500);
         shipAffineTransform = battleCruiser.moveSelf();
         shipArea = shipArea.createTransformedArea(shipAffineTransform);
         battleCruiser.paintSelf(g2);
-        System.out.println(collision(shipArea, shipArea));;
-        for (Astroid a : astroidList)
+        System.out.println(collision(shipArea, shipArea));
+        for (int i = 0; i < astroidList.size(); i++)
         {
+            Astroid a = astroidList.get(i);
             a.paintSelf(g2);
             a.moveSelf();
             if (a.astroidXpos > width)
+            {
+                astroidList.remove(a);
+            }
+             if (a.astroidXpos < 0)
+            {
+                astroidList.remove(a);
+            }
+              if (a.astroidYpos > height)
+            {
+                astroidList.remove(a);
+            }
+               if (a.astroidXpos < 0)
             {
                 astroidList.remove(a);
             }

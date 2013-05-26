@@ -74,10 +74,9 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(spaceImage, 0, 0, null);
         shipAffineTransform = battleCruiser.moveSelf();
-        System.out.println(battleCruiser);
-        //shipArea = shipArea.createTransformedArea(battleCruiser.moveSelf());
-        System.out.println(collision(shipArea, shipArea));
+        shipArea = shipArea.createTransformedArea(shipAffineTransform);
         battleCruiser.paintSelf(g2);
+        System.out.println(collision(shipArea, shipArea));;
         for (Astroid a : astroidList)
         {
             a.paintSelf(g2);

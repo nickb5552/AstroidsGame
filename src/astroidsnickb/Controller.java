@@ -55,15 +55,15 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         astroidField.addKeyListener(this);
         spaceImage = new ImageIcon(this.getClass().getResource("SpaceBG.jpg")).getImage();
     }
-    
+
     public boolean collision(Area area1, Area area2)
     {
         Area arealclone = (Area) area1.clone();
         arealclone.intersect(area2);
         if (!arealclone.isEmpty())
         {
-           return false; 
-        } else 
+            return false;
+        } else
         {
             return true;
         }
@@ -83,26 +83,27 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         System.out.println(collision(shipArea, shipArea));
         for (int i = 0; i < astroidList.size(); i++)
         {
+            g2.setTransform(new AffineTransform());
             Astroid a = astroidList.get(i);
+            g2.translate(a.astroidXpos, a.astroidYpos);
             a.paintSelf(g2);
-            a.moveSelf();
             if (a.astroidXpos > width)
             {
-                astroidList.remove(a);
+                astroidList.remove(i);
             }
-             if (a.astroidXpos < 0)
+            if (a.astroidXpos < -1000)
             {
-                astroidList.remove(a);
+                astroidList.remove(i);
             }
-              if (a.astroidYpos > height)
+            if (a.astroidYpos > height)
             {
-                astroidList.remove(a);
+                astroidList.remove(i);
             }
-               if (a.astroidXpos < 0)
+            if (a.astroidYpos < -1000)
             {
-                astroidList.remove(a);
+                astroidList.remove(i);
             }
-        } 
+        }
     }
 
     @Override

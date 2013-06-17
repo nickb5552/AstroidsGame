@@ -163,25 +163,25 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     @Override
     public void keyPressed(KeyEvent ke)
     {
-        if (ke.getKeyCode() == 37)//turns left
+        if (ke.getKeyCode() == KeyEvent.VK_LEFT)//turns left
         {
             battleCruiser.shipHeading -= 5;
         }
 
-        if (ke.getKeyCode() == 39)//turns right
+        if (ke.getKeyCode() == KeyEvent.VK_RIGHT)//turns right
         {
             battleCruiser.shipHeading += 5;
         }
 
-        if (ke.getKeyCode() == 38)//increase speed
+        if (ke.getKeyCode() == KeyEvent.VK_UP)//increase speed
         {
             battleCruiser.shipSpeed += 1;
         }
-        if (ke.getKeyCode() == 40)//decrease speed
+        if (ke.getKeyCode() == KeyEvent.VK_DOWN)//decrease speed
         {
             battleCruiser.shipSpeed -= 1;
         }
-        if (ke.getKeyCode() == 32) //spacebar shoot bullet
+        if (ke.getKeyCode() == KeyEvent.VK_SPACE) //spacebar shoot bullet
         {
             bulletList.add(new Bullet(shipXpos, shipYpos, shipSpeed, shipHeading));
             fireFile.play();

@@ -1,5 +1,6 @@
 package astroidsnickb;
 
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,12 +12,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import quicktime.std.sg.AudioChannel;
 
 public class Controller extends JComponent implements KeyListener, ActionListener, Runnable
 {
@@ -27,12 +31,18 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     Timer paintTicker;
     Timer astroidTicker;
     ArrayList<Astroid> astroidList;
+    ArrayList<Bullet> bulletList;
     Image spaceImage;
-    int ShipXpos;
-    int ShipYpos;
+    double shipXpos;
+    double shipYpos;
+    double shipSpeed;
+    double shipHeading;
     AffineTransform shipAffineTransform = new AffineTransform();
     Area shipArea = new Area();
-    Area astroidArea;
+    Area astroidArea = new Area();
+    Area bulletArea = new Area();
+    URL fireSoundAddress = getClass().getResource("fire.aiff");
+    AudioClip fireFile = JApplet.newAudioClip(fireSoundAddress);
 
     public static void main(String[] joe)
     {
@@ -42,6 +52,7 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     public void run()
     {
         astroidList = new ArrayList<Astroid>();
+        bulletList = new ArrayList<Bullet>();
         paintTicker = new Timer(20, this);
         paintTicker.start();
         astroidTicker = new Timer(1000, this);
@@ -62,10 +73,10 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         arealclone.intersect(area2);
         if (!arealclone.isEmpty())
         {
-            return false;
+            return true;
         } else
         {
-            return true;
+            return false;
         }
     }
 
@@ -77,10 +88,13 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         g2.setTransform(new AffineTransform());
         g2.setColor(Color.WHITE);
         g2.drawString(astroidList.size() + "", 500, 500);
-        shipAffineTransform = battleCruiser.moveSelf();
-        shipArea = shipArea.createTransformedArea(shipAffineTransform);
+        battleCruiser.moveSelf();
+        this.shipXpos = battleCruiser.getShipXpos();
+        this.shipYpos = battleCruiser.getShipYpos();
+        this.shipHeading = battleCruiser.getShipHeading();
+        shipSpeed = battleCruiser.getShipSpeed();
         battleCruiser.paintSelf(g2);
-        System.out.println(collision(shipArea, shipArea));
+        shipArea = shipArea.createTransformedArea(shipAffineTransform);
         for (int i = 0; i < astroidList.size(); i++)
         {
             g2.setTransform(new AffineTransform());
@@ -102,6 +116,41 @@ public class Controller extends JComponent implements KeyListener, ActionListene
             if (a.astroidYpos < -1000)
             {
                 astroidList.remove(i);
+            }
+            astroidArea.createTransformedArea(a.getAstroidAffineTransform());
+        }
+        for (int i = 0; i < bulletList.size(); i++)
+        {
+            g2.setTransform(new AffineTransform()); //idenity transform -> set to (0,0)
+            Bullet b = bulletList.get(i);
+            b.paintSelf(g2);
+            if (b.bulletXpos > width)
+            {
+                bulletList.remove(i);
+            }
+            if (b.bulletXpos < -1000)
+            {
+                bulletList.remove(i);
+            }
+            if (b.bulletYpos > height)
+            {
+                bulletList.remove(i);
+            }
+            if (b.bulletYpos < -1000)
+            {
+                bulletList.remove(i);
+            }
+            bulletArea.createTransformedArea(b.getBulletAffineTransform());
+            for (int j = 0; j < astroidList.size(); j++) //collision checker
+            {
+                Astroid a = astroidList.get(j);
+                astroidArea.createTransformedArea(a.getAstroidAffineTransform());
+                bulletArea.createTransformedArea(b.getBulletAffineTransform());
+                System.out.println((int)a.getAstroidAffineTransform().getTranslateY() + "/" + (int)b.getBulletAffineTransform().getTranslateY());
+                if (collision(bulletArea, astroidArea))
+                {
+                    astroidList.remove(j);
+                }
             }
         }
     }
@@ -131,6 +180,11 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         if (ke.getKeyCode() == 40)//decrease speed
         {
             battleCruiser.shipSpeed -= 1;
+        }
+        if (ke.getKeyCode() == 32) //spacebar shoot bullet
+        {
+            bulletList.add(new Bullet(shipXpos, shipYpos, shipSpeed, shipHeading));
+            fireFile.play();
         }
     }
 

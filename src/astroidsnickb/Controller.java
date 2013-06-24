@@ -20,7 +20,6 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import quicktime.std.sg.AudioChannel;
 
 public class Controller extends JComponent implements KeyListener, ActionListener, Runnable
 {
@@ -41,7 +40,7 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     Area shipArea = new Area();
     Area astroidArea = new Area();
     Area bulletArea = new Area();
-    URL fireSoundAddress = getClass().getResource("fire.aiff");
+    URL fireSoundAddress = getClass().getResource("bullet.wav");
     AudioClip fireFile = JApplet.newAudioClip(fireSoundAddress);
 
     public static void main(String[] joe)
@@ -88,7 +87,6 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         g2.setTransform(new AffineTransform());
         g2.setColor(Color.WHITE);
         g2.drawString(astroidList.size() + "", 500, 500);
-        battleCruiser.moveSelf();
         this.shipXpos = battleCruiser.getShipXpos();
         this.shipYpos = battleCruiser.getShipYpos();
         this.shipHeading = battleCruiser.getShipHeading();
@@ -117,7 +115,6 @@ public class Controller extends JComponent implements KeyListener, ActionListene
             {
                 astroidList.remove(i);
             }
-            astroidArea.createTransformedArea(a.getAstroidAffineTransform());
         }
         for (int i = 0; i < bulletList.size(); i++)
         {
@@ -141,16 +138,19 @@ public class Controller extends JComponent implements KeyListener, ActionListene
                 bulletList.remove(i);
             }
             bulletArea.createTransformedArea(b.getBulletAffineTransform());
+            g2.setColor(Color.yellow);
+            g2.draw(bulletArea);
             for (int j = 0; j < astroidList.size(); j++) //collision checker
             {
                 Astroid a = astroidList.get(j);
-                astroidArea.createTransformedArea(a.getAstroidAffineTransform());
-                bulletArea.createTransformedArea(b.getBulletAffineTransform());
-                System.out.println((int)a.getAstroidAffineTransform().getTranslateY() + "/" + (int)b.getBulletAffineTransform().getTranslateY());
+                astroidArea = a.astroidArea;
                 if (collision(bulletArea, astroidArea))
                 {
                     astroidList.remove(j);
                 }
+                astroidArea.createTransformedArea(a.getAstroidAffineTransform());
+                g2.setColor(Color.GREEN);
+                g2.draw(astroidArea);
             }
         }
     }

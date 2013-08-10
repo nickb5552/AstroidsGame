@@ -4,10 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 
 public class Astroid
 {
+
     int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     double astroidHeading;
@@ -21,8 +23,9 @@ public class Astroid
     double astroidDeltaY;
     double scaleX;
     double scaleY;
-    Ellipse2D.Double astroid = new Ellipse2D.Double(astroidXpos, astroidYpos, astroidSize, astroidSize);
-    AffineTransform astroidAffineTransform = new AffineTransform();
+    Ellipse2D.Double astroid;
+    private AffineTransform astroidAffineTransform = new AffineTransform();
+    private Area astroidArea;
 
     public Astroid() //Constructor 
     {
@@ -60,22 +63,29 @@ public class Astroid
                 astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
                 break;
         }
+        astroid = new Ellipse2D.Double(astroidXpos, astroidYpos, astroidSize, astroidSize);
+        astroidArea = new Area(astroid);
     }
-
-    public void moveSelf()
-    {
-        astroidXpos += astroidDeltaX;
-        astroidYpos += astroidDeltaY;
-//        astroidSize = astroidSize + .3;
-    }
-
+    
     public void paintSelf(Graphics2D g2)
     {
+        g2.setTransform(astroidAffineTransform);
         g2.setColor(new Color(0x8B, 0x45, 0x13));
-        g2.setTransform(new AffineTransform());
+        astroidXpos += astroidDeltaX;
+        astroidYpos += astroidDeltaY;
         g2.translate(astroidXpos, astroidYpos);
         g2.scale(astroidSize, astroidSize);
-//        System.out.println((int)astroidXpos + "/" + (int)astroidYpos + "/" + (int)astroidSize);
         g2.fill(astroid);
+        astroidAffineTransform = g2.getTransform();
+    }
+
+    public Area getAstroidArea()
+    {
+        return astroidArea;
+    }
+
+    public AffineTransform getAstroidAffineTransform()
+    {
+        return astroidAffineTransform;
     }
 }

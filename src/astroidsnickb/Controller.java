@@ -40,8 +40,8 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     Area shipArea = new Area();
     Area astroidArea = new Area();
     Area bulletArea = new Area();
-    URL fireSoundAddress = getClass().getResource("bullet.wav");
-    AudioClip fireFile = JApplet.newAudioClip(fireSoundAddress);
+//    URL fireSoundAddress = getClass().getResource("bullet.wav");
+//    AudioClip fireFile = JApplet.newAudioClip(fireSoundAddress);
 
     public static void main(String[] joe)
     {
@@ -143,7 +143,7 @@ public class Controller extends JComponent implements KeyListener, ActionListene
             for (int j = 0; j < astroidList.size(); j++) //collision checker
             {
                 Astroid a = astroidList.get(j);
-                astroidArea = a.astroidArea;
+                astroidArea = a.getAstroidArea();
                 if (collision(bulletArea, astroidArea))
                 {
                     astroidList.remove(j);
@@ -165,26 +165,26 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     {
         if (ke.getKeyCode() == KeyEvent.VK_LEFT)//turns left
         {
-            battleCruiser.shipHeading -= 5;
+            battleCruiser.setShipHeading(battleCruiser.getShipHeading() - 5);
         }
 
         if (ke.getKeyCode() == KeyEvent.VK_RIGHT)//turns right
         {
-            battleCruiser.shipHeading += 5;
+            battleCruiser.setShipHeading(battleCruiser.getShipHeading() + 5);
         }
 
         if (ke.getKeyCode() == KeyEvent.VK_UP)//increase speed
         {
-            battleCruiser.shipSpeed += 1;
+            battleCruiser.setShipSpeed(battleCruiser.getShipSpeed() + 1);
         }
         if (ke.getKeyCode() == KeyEvent.VK_DOWN)//decrease speed
         {
-            battleCruiser.shipSpeed -= 1;
+            battleCruiser.setShipSpeed(battleCruiser.getShipSpeed() - 1);
         }
         if (ke.getKeyCode() == KeyEvent.VK_SPACE) //spacebar shoot bullet
         {
             bulletList.add(new Bullet(shipXpos, shipYpos, shipSpeed, shipHeading));
-            fireFile.play();
+//            fireFile.play();
         }
     }
 

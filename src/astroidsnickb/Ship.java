@@ -63,7 +63,7 @@ public class Ship
         shipAffineTransform = g2.getTransform();
         g2.fill(shipShape);
         g2.setColor(Color.WHITE);
-        g2.draw(shipShape);
+        g2.draw(shipArea);
         g2.setTransform(new AffineTransform());
         g2.drawString("Course " + getShipHeading(), 1800, 200);
         g2.drawString("Speed " + getShipSpeed(), 1800, 300);

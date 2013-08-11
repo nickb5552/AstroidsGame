@@ -13,8 +13,8 @@ public class Astroid
     int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     double astroidHeading;
-    double astroidXpos;
-    double astroidYpos;
+    private double getAstroidXpos;
+    private double astroidYpos;
     double astroidSpeed;
     double astroidXspeed;
     double astroidYspeed;
@@ -29,53 +29,48 @@ public class Astroid
 
     public Astroid() //Constructor 
     {
-        astroidSize = (Math.random() * 50) + 5;
-        astroidSpeed = (Math.random() * 5) + 2;
+//        astroidSize = (Math.random() * 50) + 5;
+        astroidSize = 50;
+//        astroidSpeed = (Math.random() * 5) + 2;
+        astroidSpeed = 2;
         int edge = (int) ((Math.random() * 4) + 1);
         switch (edge)
         {
             case 1:
-                astroidXpos = Math.random() * width;
+                getAstroidXpos = Math.random() * width;
                 astroidYpos = 0;
                 astroidHeading = (Math.random() * 180) + 90;
-                astroidDeltaX = Math.sin(Math.toRadians(astroidHeading)) * astroidSpeed;
-                astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
                 break;
             case 2:
-                astroidXpos = width;
+                getAstroidXpos = width;
                 astroidYpos = Math.random() * height;
                 astroidHeading = (Math.random() * 180) + 180;
-                astroidDeltaX = Math.sin(Math.toRadians(astroidHeading)) * astroidSpeed;
-                astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
                 break;
             case 3:
-                astroidXpos = Math.random() * width;
+                getAstroidXpos = Math.random() * width;
                 astroidYpos = height;
                 astroidHeading = (Math.random() * 180) + 270;
-                astroidDeltaX = Math.sin(Math.toRadians(astroidHeading)) * astroidSpeed;
-                astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
                 break;
             case 4:
-                astroidXpos = 0;
+                getAstroidXpos = 0;
                 astroidYpos = Math.random() * height;
                 astroidHeading = (Math.random() * 180) + 0;
-                astroidDeltaX = Math.sin(Math.toRadians(astroidHeading)) * astroidSpeed;
-                astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
                 break;
         }
-        astroid = new Ellipse2D.Double(astroidXpos, astroidYpos, astroidSize, astroidSize);
+        astroidDeltaX = Math.sin(Math.toRadians(astroidHeading)) * astroidSpeed;
+        astroidDeltaY = -Math.cos(Math.toRadians(astroidHeading)) * astroidSpeed;
+        astroid = new Ellipse2D.Double(0, 0, astroidSize, astroidSize);
         astroidArea = new Area(astroid);
     }
-    
+
     public void paintSelf(Graphics2D g2)
     {
         g2.setTransform(astroidAffineTransform);
         g2.setColor(new Color(0x8B, 0x45, 0x13));
-        astroidXpos += astroidDeltaX;
+        getAstroidXpos += astroidDeltaX;
         astroidYpos += astroidDeltaY;
-        g2.translate(astroidXpos, astroidYpos);
-        g2.scale(astroidSize, astroidSize);
-        g2.fill(astroid);
+        g2.translate(getAstroidXpos(), getAstroidYpos());
+        g2.fill(astroidArea);
         astroidAffineTransform = g2.getTransform();
     }
 
@@ -87,5 +82,15 @@ public class Astroid
     public AffineTransform getAstroidAffineTransform()
     {
         return astroidAffineTransform;
+    }
+
+    public double getAstroidXpos()
+    {
+        return getAstroidXpos;
+    }
+
+    public double getAstroidYpos()
+    {
+        return astroidYpos;
     }
 }

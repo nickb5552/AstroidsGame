@@ -83,35 +83,34 @@ public class Controller extends JComponent implements KeyListener, ActionListene
     public void paint(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
-        g2.drawImage(spaceImage, 0, 0, null);
+        g2.drawImage(spaceImage, 0, 0, width, height, null);
         g2.setTransform(new AffineTransform());
         g2.setColor(Color.WHITE);
-        g2.drawString(astroidList.size() + "", 500, 500);
+        g2.drawString(astroidList.size() + " astroids", (width - 760), 400);
         this.shipXpos = battleCruiser.getShipXpos();
         this.shipYpos = battleCruiser.getShipYpos();
         this.shipHeading = battleCruiser.getShipHeading();
         shipSpeed = battleCruiser.getShipSpeed();
         battleCruiser.paintSelf(g2);
-        shipArea = shipArea.createTransformedArea(shipAffineTransform);
         for (int i = 0; i < astroidList.size(); i++)
         {
             g2.setTransform(new AffineTransform());
             Astroid a = astroidList.get(i);
-            g2.translate(a.astroidXpos, a.astroidYpos);
+            g2.translate(a.getAstroidXpos(), a.getAstroidYpos());
             a.paintSelf(g2);
-            if (a.astroidXpos > width)
+            if (a.getAstroidXpos() > width)
             {
                 astroidList.remove(i);
             }
-            if (a.astroidXpos < -1000)
+            if (a.getAstroidXpos() < -1000)
             {
                 astroidList.remove(i);
             }
-            if (a.astroidYpos > height)
+            if (a.getAstroidYpos() > height)
             {
                 astroidList.remove(i);
             }
-            if (a.astroidYpos < -1000)
+            if (a.getAstroidYpos() < -1000)
             {
                 astroidList.remove(i);
             }
@@ -120,6 +119,7 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         {
             g2.setTransform(new AffineTransform()); //idenity transform -> set to (0,0)
             Bullet b = bulletList.get(i);
+            g2.translate(0, 0);
             b.paintSelf(g2);
             if (b.bulletXpos > width)
             {
@@ -137,20 +137,15 @@ public class Controller extends JComponent implements KeyListener, ActionListene
             {
                 bulletList.remove(i);
             }
-            bulletArea.createTransformedArea(b.getBulletAffineTransform());
-            g2.setColor(Color.yellow);
-            g2.draw(bulletArea);
             for (int j = 0; j < astroidList.size(); j++) //collision checker
             {
+                g2.setTransform(shipAffineTransform);
                 Astroid a = astroidList.get(j);
                 astroidArea = a.getAstroidArea();
                 if (collision(bulletArea, astroidArea))
                 {
                     astroidList.remove(j);
                 }
-                astroidArea.createTransformedArea(a.getAstroidAffineTransform());
-                g2.setColor(Color.GREEN);
-                g2.draw(astroidArea);
             }
         }
     }

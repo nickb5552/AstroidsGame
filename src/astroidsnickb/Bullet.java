@@ -30,7 +30,7 @@ public class Bullet
         this.shipSpeed = shipSpeed;
         bulletXpos = shipXpos;
         bulletYpos = shipYpos;
-        bulletShape = new Rectangle2D.Double(bulletXpos, bulletYpos, bulletWidth, bulletHeight);
+        bulletShape = new Rectangle2D.Double(0, 0, bulletWidth, bulletHeight);
         bulletArea = new Area(bulletShape);
     }
 
@@ -44,7 +44,7 @@ public class Bullet
         bulletXpos += bulletDeltaX;
         bulletYpos += bulletDeltaY;
         g2.translate(bulletXpos, bulletYpos);
-        g2.fill(bulletShape);
+        g2.fill(bulletArea);
         bulletAffineTransform = g2.getTransform();
     }
 

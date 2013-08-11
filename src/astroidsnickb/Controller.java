@@ -96,21 +96,21 @@ public class Controller extends JComponent implements KeyListener, ActionListene
         {
             g2.setTransform(new AffineTransform());
             Astroid a = astroidList.get(i);
-            g2.translate(a.getAstroidXpos(), a.getAstroidYpos());
+            g2.translate(a.getAstroidXtranslation(), a.getAstroidYtranslation());
             a.paintSelf(g2);
-            if (a.getAstroidXpos() > width)
+            if (a.getAstroidXtranslation() > width)
             {
                 astroidList.remove(i);
             }
-            if (a.getAstroidXpos() < -1000)
+            if (a.getAstroidXtranslation() < -1000)
             {
                 astroidList.remove(i);
             }
-            if (a.getAstroidYpos() > height)
+            if (a.getAstroidYtranslation() > height)
             {
                 astroidList.remove(i);
             }
-            if (a.getAstroidYpos() < -1000)
+            if (a.getAstroidYtranslation() < -1000)
             {
                 astroidList.remove(i);
             }
